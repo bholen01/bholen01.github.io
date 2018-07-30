@@ -1,26 +1,33 @@
-/**
- * index.js
- */
-import http from 'http';
-import express from 'express';
+/* eslint-disable import/no-extraneous-dependencies */
+/*
+  issue with react-hot-loader
+  eventhough those 2 dependencies are only used in development
+  eslint has no way to tell that and outputs an error
+*/
 
-const app = express()
+// react dependencies
+import React from 'react';
+import ReactDOM from 'react-dom';
+// hot reload for development
+import { AppContainer } from 'react-hot-loader';
 
-const server = http.createServer(app);
-server.listen(3000);
-server.on('listening', () => {
-  console.log('Server is listening on port: 3000');
-});
+import App from './App';
 
-app.get('*', (req, res) => {
-    res.end('Hello Express');
-  });
+import './style.scss';
 
-const logSomething = options => ({
-    ...options,
-    anotherOption: 'Hello!'
-  });
+const root = document.getElementById('root');
 
-  const options = logSomething({ one: '1', two: '2' });
+const render = (Component) => {
+  ReactDOM.render(
+    <AppContainer>
+      <Component />
+    </AppContainer>,
+    root,
+  );
+};
 
-  console.log(options);
+render(App);
+
+if (module.hot) {
+  module.hot.accept('./App', () => { render(App); });
+}
